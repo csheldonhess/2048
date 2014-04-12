@@ -64,6 +64,7 @@ while maxnum < 2048:
 			break
 		elif command[0] == 'u' or command[0] == 'U':
 			print('You picked up')
+			diditmove = False
 			for x in range(0, 4): 
 				for y in range(0, 4): # look for topmost nonzero element
 					if theboard[y][x] != 0 and y < 3: # if y == 3, no need to look further
@@ -71,6 +72,7 @@ while maxnum < 2048:
 							if theboard[yprime][x] != 0: # so there IS a number there
 								if theboard[yprime][x] == theboard[y][x]:
 									theboard[y][x] = 2 * theboard[y][x]
+									diditmove = True
 									if theboard[y][x] > maxnum: # looking for win condition
 										maxnum = theboard[y][x]
 									playerscore = playerscore + theboard[y][x] # keepin' score
@@ -85,11 +87,14 @@ while maxnum < 2048:
 							if theboard[yprime][x] != 0:
 								theboard[y][x] = theboard[yprime][x]
 								theboard[yprime][x] = 0
+								diditmove = True
 								break # gets us out of yprime loop, to prevent overwriting
-			addanumber(theboard)
+			if diditmove == True:
+				addanumber(theboard)
 			printboard(theboard, playerscore)	
 		elif command[0] == 'r' or command[0] == 'R':
 			print('You picked right')
+			diditmove = False
 			for y in range(0, 4): # 0 through 3
 				for x in range(3, -1, -1): # 3, 2, 1, 0 - weird-looking, but right
 					# we are looking for the LAST nonzero element (in this case, rightmost)
@@ -98,6 +103,7 @@ while maxnum < 2048:
 							if theboard[y][xprime] != 0: # found a number to the left!
 								if theboard[y][xprime] == theboard[y][x]:
 									theboard[y][x] = 2 * theboard[y][x]
+									diditmove = True
 									playerscore = playerscore + theboard[y][x]
 									if theboard[y][x] > maxnum:
 										maxnum = theboard[y][x]
@@ -112,11 +118,14 @@ while maxnum < 2048:
 							if theboard[y][xprime] != 0: 
 								theboard[y][x] = theboard[y][xprime]
 								theboard[y][xprime] = 0
+								diditmove = True
 								break # gets us out of xprime loop; important so we don't overwrite
-			addanumber(theboard)
+			if diditmove == True:
+				addanumber(theboard)
 			printboard(theboard, playerscore)	
 		elif command[0] == 'd' or command[0] == 'D':
 			print('You picked down')
+			diditmove = False
 			for x in range(0, 4): 
 				for y in range(3, -1, -1): # looking for bottommost nonzero element
 					if theboard[y][x] != 0 and y > 0: # if y == 0, we're at the top
@@ -124,6 +133,7 @@ while maxnum < 2048:
 							if theboard[yprime][x] != 0: # we have a number! is it a match?
 								if theboard[yprime][x] == theboard[y][x]:
 									theboard[y][x] = theboard[y][x] * 2
+									diditmove = True
 									if theboard[y][x] > maxnum:
 										maxnum = theboard[y][x]
 									playerscore = playerscore + theboard[y][x]
@@ -138,11 +148,14 @@ while maxnum < 2048:
 							if theboard[yprime][x] != 0:
 								theboard[y][x] = theboard[yprime][x]
 								theboard[yprime][x] = 0
+								diditmove = True
 								break # leaving the yprime loop to avoid overwriting!
-			addanumber(theboard)
+			if diditmove == True:
+				addanumber(theboard)
 			printboard(theboard, playerscore)	
 		elif command[0] == 'l' or command[0] == 'L':
 			print('You picked left')
+			diditmove = False
 			for y in range(0, 4):
 				for x in range(0, 4): # we want the last (leftmost) nonzero element
 					if theboard[y][x] != 0 and x < 3: # no need to go further if we're @ end
@@ -150,6 +163,7 @@ while maxnum < 2048:
 							if theboard[y][xprime] != 0: # found a number to the right!
 								if theboard[y][x] == theboard[y][xprime]:
 									theboard[y][x] = 2 * theboard[y][x]
+									diditmove = True
 									playerscore = playerscore + theboard[y][x]
 									if theboard[y][x] > maxnum:
 										maxnum = theboard[y][x]
@@ -164,14 +178,17 @@ while maxnum < 2048:
 							if theboard[y][xprime] != 0:
 								theboard[y][x] = theboard[y][xprime]
 								theboard[y][xprime] = 0
+								diditmove = True
 								break # got to leave the xprime loop so we don't overwrite
-			addanumber(theboard)
+			if diditmove == True:
+				addanumber(theboard)
 			printboard(theboard, playerscore)
 		else: 
 			print('That wasn\'t one of the choices. Try again?')
 	else: # no input
 		print('You need to enter a character.')
 
+	# Here is where we see if the player lost the game. 
 	# if there are no empty squares left, the game is over
 	zeroes = 0
 	# UNLESS there are valid moves left!
